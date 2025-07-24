@@ -1,13 +1,13 @@
 import { FC } from "react";
 
-type ChatProps = {
+type ChatTabProps = {
   count: number;
   msg: string;
   name: string;
   time: string;
 }
 
-const ChatTab: FC<ChatProps> = (props) => {
+const ChatTab: FC<ChatTabProps> = (props) => {
 
   const truncate = (string: string) => {
     if (string.length > 25) {
@@ -27,7 +27,7 @@ const ChatTab: FC<ChatProps> = (props) => {
   
 
   return (
-    <div className="border-1 border-[#233436] h-30 bg-[#087E8B] flex items-center max-w-1/1">
+    <div className="border-1 border-[#233436] h-30 bg-[#F5F5F5] flex items-center max-w-1/1">
       <img 
         // image is placeholder empty icon   
         src="https://braverplayers.org/wp-content/uploads/2022/09/braver-blank-pfp.jpg"
@@ -44,7 +44,7 @@ const ChatTab: FC<ChatProps> = (props) => {
                 //   0
                 // </div>
             }
-            <b className="pl-5 pr-2">
+            <b className="pl-5 pr-2 text-[#233436]">
                 {truncate(props.name)}
             </b>
           </div>
