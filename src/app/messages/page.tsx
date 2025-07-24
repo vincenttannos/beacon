@@ -13,12 +13,20 @@ const dummyData = [
     'asjdnadnwi',
     'awjdbnacbnaicn',
     'duawbnancakcn',
-    'hello'
+    'hello',
+    'g',
+    'asdadwhaoidhia',
+    'as',
+    'adadinaidnasdnasnjvnjvbsjkvbjksvbnsvbnklnvaklvnaklnvklanvklan',
+    'cocomelonese',
+    'abracadabra',
+    'm',
+    'dsja',
 ]
 
 const Messages: FC<MessagesProps> = (props) => {
   return (
-    <section className="min-h-[100vh] bg-white text-[#233436] flex items-end">
+    <section className="min-h-[90vh] bg-white text-[#233436] flex items-end">
       <div className="w-1/1 h-1/1">
         {dummyData.map((x) => 
             // make key some string of the metadata

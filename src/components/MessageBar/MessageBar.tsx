@@ -28,7 +28,7 @@ function MessageBar(props: MessageBarProps) {
   } 
 
   return (
-    <div className="flex bg-[#E0E0E0]">
+    <div className="flex bg-[#E0E0E0] sticky bottom-0">
       <div className="grow-1 p-2 pr-8 text-[1.4rem] rounded-full bg-white m-3 align-baseline">
         <input className="outline-none text-[1.4rem] rounded-full ml-3 align-baseline"
             placeholder="message"
