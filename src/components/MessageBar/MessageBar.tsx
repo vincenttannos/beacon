@@ -34,6 +34,9 @@ function MessageBar(props: MessageBarProps) {
             placeholder="message"
             // on change, set the message to the new one
             onChange={(newMsg) => setMessage(newMsg.target.value)}
+            onKeyDown={(e) => {
+              e.key == 'Enter' && send();
+            }}
             value={message}>
         </input>
       </div>

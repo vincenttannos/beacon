@@ -20,13 +20,9 @@ const Message: FC<MessageProps> = (props) => {
 
   return (
     <div className={textboxStyle}>
-        {/* <section className="flex h-3/5 text-[1.5rem] justify-between items-center">
-          <div className="flex items-center"> */}
-            <p className="pl-3 pr-3 text-[2rem]">
-                {props.msg}
-            </p>
-          {/* </div>
-        </section> */}
+        <p className="pl-3 pr-3 text-[2rem]">
+            {props.msg}
+        </p>
     </div>
   );
 }
