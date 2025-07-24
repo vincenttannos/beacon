@@ -33,14 +33,21 @@ const ChatTab: FC<ChatProps> = (props) => {
         src="https://braverplayers.org/wp-content/uploads/2022/09/braver-blank-pfp.jpg"
         className="h-4/5 m-2.5  rounded-full"
       ></img>
-      <div className="bg-[#FF5A5F] h-10 min-w-10 text-center ml-4 p-2 border-1 rounded-full">
-        {capCount(props.count)}
-      </div>
       <section className="w-1/1">
         <section className="flex h-3/5 text-[2.5rem] justify-between items-center">
-          <b className="pl-5 pr-2">
-            {truncate(props.name)}
-          </b>
+          <div className="flex items-center">
+            {props.count != 0 &&
+                <b className="text-[1rem] bg-[#FF5A5F] h-10 min-w-10 text-center ml-4 p-2 rounded-full">
+                    {capCount(props.count)}
+                </b> 
+                // <div className="bg-[#165961] h-10 min-w-10 text-center ml-4 p-2 rounded-full">
+                //   0
+                // </div>
+            }
+            <b className="pl-5 pr-2">
+                {truncate(props.name)}
+            </b>
+          </div>
           <p className="pl-2 pr-5 text-[1.5rem] text-gray-400">
             {props.time}
           </p>
