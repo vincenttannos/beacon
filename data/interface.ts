@@ -1,5 +1,6 @@
+import { DiffieHellman } from "crypto";
 
-type MessageInfo = {
+export type MessageInfo = {
     message: string;
     timeSent: number;
     sender: string;
@@ -10,14 +11,18 @@ type MessageInfo = {
     // editedMessages: MessageInfo[]
 }
 
-type ChatRoom = {
+export type ChatRoom = {
     messageCount: number;
     messages: MessageInfo[];
     lastMessageBy: string;
-    privateKey: number;
-    publicKey: number;
-    mod: number;
-    generator: number;
+    privateKey: string;
+    publicKey: string;
+    partnerKey: string;
+    prime: string;
+    generator: string;
+    secret: string;
+    chainKey: string;
+    dh: DiffieHellman;
 }
 
 // type User = {
@@ -34,14 +39,14 @@ type ChatRoom = {
 
 // type UserOrUndefined = User | undefined;
 
-type ErrorObject = {
+export type ErrorObject = {
     error: string;
 }
 
-export { 
-    MessageInfo, 
-    ChatRoom,
-    // User,
-    // UserOrUndefined,
-    ErrorObject,
-}
+// export { 
+//     MessageInfo, 
+//     ChatRoom,
+//     // User,
+//     // UserOrUndefined,
+//     ErrorObject,
+// }

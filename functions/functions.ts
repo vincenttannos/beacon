@@ -15,6 +15,7 @@ import {
   ErrorObject,
 } from '../data/interface';
 
+const PRIME_LENGTH = 1024;
 
 // fetches data from store
 const retrieveData = (): ChatRoom[] => {
@@ -166,18 +167,40 @@ const initiate = (msg: string) => {
     // send msg in plaintext with these
 }
 
+let array: string[] = []
+// const socket = new WebSocket('url', 'protocols');
+
+type DHInfo = {
+    dh: crypto.DiffieHellman;
+}
+
+const kdf = (secret: string, chainKey: string) => {
+    let newKey = Buffer.from(crypto.hkdfSync('sha256', secret, chainKey, '', 32)).toString('hex');
+    return newKey;
+}
+
+// sends an encrypted message with HMAC and a new public and private key
 const sendMessage = (
+    chatRoom: ChatRoom,
     msg: string, 
     sender: string, 
     recipient: string, 
     index: number,
-    secret: number
 ) => {
-    // Diffie Hellman Key Exchange
-    const dh = crypto.createDiffieHellman(1024);
-    const publicKey = dh.generateKeys('hex');
-    const prime = dh.getPrime('hex');
-    const generator = dh.getGenerator('hex');
+    // Generate new public key (DH ratchet)
+    if (chatRoom.lastMessageBy != sender) { // replying
+        const dh = crypto.createDiffieHellman(chatRoom.prime, 'hex', chatRoom.generator, 'hex');
+        dh.generateKeys();
+        chatRoom.secret = dh.computeSecret(chatRoom.partnerKey, 'hex', 'hex');
+        chatRoom.chainKey = chatRoom.secret;
+        chatRoom.publicKey = dh.getPublicKey('hex');
+        chatRoom.privateKey = dh.getPrivateKey('hex');
+        chatRoom.dh = dh;
+    }
+
+    // Symmetric ratchet
+    const newKey = kdf(chatRoom.secret, chatRoom.chainKey);
+    chatRoom.chainKey = newKey;
 
     // AES Encryption
     const info: MessageInfo = {
@@ -189,16 +212,75 @@ const sendMessage = (
         failed: false
     }
     const content = JSON.stringify(info);
-    const encryptedText = aes256.encrypt(secret.toString(), content);
+    const encryptedText = aes256.encrypt(newKey, content);
 
     // HMAC
-    const HMAC = hmac(sha256, secret.toString(), encryptedText);
+    const HMAC = hmac(sha256, chatRoom.secret, encryptedText).toString();
 
-    // console.log([publicKey, prime, generator, encryptedText, HMAC])
+    // send 
+    const sendData = {
+        sender: sender,
+        recipient: recipient,
+        publicKey: chatRoom.publicKey,
+        encryptedText: encryptedText,
+        HMAC: HMAC
+    }
+    // socket.send(JSON.stringify(sendData));
+
+    console.log([chatRoom.publicKey, chatRoom.prime, chatRoom.generator, encryptedText, HMAC])
+    array = [chatRoom.publicKey, chatRoom.prime, chatRoom.generator, encryptedText, HMAC]
+    
     // HTTP/socket request with these info
+    chatRoom.lastMessageBy = sender;
+    return sendData
 }
-console.log("hello")
-sendMessage("hello", "me", "you", 4, 9238);
+
+
+
+// sends an encrypted message with HMAC and a new public and private key
+const receiveMessage = (
+    chatRoom: ChatRoom,
+    publicKey: string, 
+    encryptedText: string,
+    HMAC: string,
+    sender: string,
+    recipient: string
+) => {
+    // Get new DH public key from partner if this is first receipt
+    if (chatRoom.lastMessageBy == recipient) {
+        chatRoom.partnerKey = publicKey;
+        chatRoom.secret = chatRoom.dh.computeSecret(chatRoom.partnerKey, 'hex', 'hex');
+        chatRoom.chainKey = chatRoom.secret;
+    }
+
+    // Symmetric ratchet using KDF
+    console.log("chainKey is:", chatRoom.chainKey, "secret is: ", chatRoom.secret)
+    const newKey = kdf(chatRoom.secret, chatRoom.chainKey);
+    console.log(newKey, "newKey")
+    chatRoom.chainKey = newKey;
+
+    // verify HMAC
+    const localHMAC = hmac(sha256, chatRoom.secret, encryptedText);
+    if (HMAC !== localHMAC.toString()) {
+        console.log("boo");
+    }
+
+    // AES Decryption
+    const decryptedText = aes256.decrypt(newKey, encryptedText);;
+    const info: MessageInfo = JSON.parse(decryptedText);
+    // {
+    //     timeSent: timeNow(),
+    //     message: msg,
+    //     sender: sender,
+    //     recipient: recipient,
+    //     index: index,
+    //     failed: false
+    // }
+
+    chatRoom.lastMessageBy = sender;
+
+    // console.log(info)
+}
 
 
 export {

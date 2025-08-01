@@ -19,7 +19,7 @@ const Layout: FC<LayoutProps> = ({ children, name }) => {
             </div>
             
             <h1 className="grow-1 p-2 font-bold text-[3rem] text-center">
-                {name || "hello"}
+                {name || "birdfish"}
             </h1>
         </header>
 

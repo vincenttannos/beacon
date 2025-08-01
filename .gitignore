@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 data/chatRooms.json
+functions/test.ts
 
 # debug
 npm-debug.log*
