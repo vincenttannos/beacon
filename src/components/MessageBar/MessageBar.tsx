@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 type MessageBarProps = {
-  input: string;
+  input?: string;
 }
 
 function MessageBar(props: MessageBarProps) {

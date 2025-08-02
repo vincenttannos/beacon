@@ -1,6 +1,6 @@
 "use client"
 
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { FC, ReactNode } from "react"
 
 type LayoutProps = {
@@ -8,7 +8,9 @@ type LayoutProps = {
     name: string;
 }
 
-const Layout: FC<LayoutProps> = ({ children, name }) => {
+const Layout: FC<LayoutProps> = ({ children }) => {
+    const params = useParams();
+
     return (<section className="min-h-[100vh] bg-white">
         <header className="sticky top-0 h-[10vh] min-h-20 flex bg-[#165961] ">
             <div 
@@ -19,7 +21,7 @@ const Layout: FC<LayoutProps> = ({ children, name }) => {
             </div>
             
             <h1 className="grow-1 p-2 font-bold text-[3rem] text-center">
-                {name || "birdfish"}
+                {params.partner || "missing"}
             </h1>
         </header>
 

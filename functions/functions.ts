@@ -18,20 +18,32 @@ import {
 const PRIME_LENGTH = 1024;
 
 // fetches data from store
-const retrieveData = (): ChatRoom[] => {
+const retrieveData = () => {
     if (fs.readFileSync('data/chatRooms.json')) {
         const result = fs.readFileSync('data/chatRooms.json');
-        const users: ChatRoom[] = JSON.parse(result.toString());
+        const users = JSON.parse(result.toString());
         return users;
     } else {
-        fs.writeFileSync('data/chatRooms.json', JSON.stringify([]));
-        return [];
+        fs.writeFileSync('data/chatRooms.json', JSON.stringify({}));
+        return {};
     }
 }
 
 // writes data to store
-const saveData = (data: ChatRoom[]) => {
+const saveData = (data) => {
     fs.writeFileSync('data/chatRooms.json', JSON.stringify(data, null, 2));
+}
+
+// fetches username
+const getUser = () => {
+    if (fs.readFileSync('data/user.json')) {
+        const result = fs.readFileSync('data/user.json');
+        const username = JSON.parse(result.toString()).username;
+        return username;
+    } else {
+        fs.writeFileSync('data/user.json', JSON.stringify({ username: "missing" }));
+        return "missing";
+    }
 }
 
 // returns time to the second
@@ -266,7 +278,7 @@ const receiveMessage = (
     }
 
     // AES Decryption
-    const decryptedText = aes256.decrypt(newKey, encryptedText);;
+    const decryptedText = aes256.decrypt(newKey, encryptedText);
     const info: MessageInfo = JSON.parse(decryptedText);
     // {
     //     timeSent: timeNow(),
@@ -286,6 +298,7 @@ const receiveMessage = (
 export {
     retrieveData,
     saveData,
+    getUser,
     // signUp,
     // logIn,
     // logOut

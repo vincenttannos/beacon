@@ -1,11 +1,16 @@
+"use client"
+
+import { useParams } from "next/navigation";
 import { FC } from "react";
 
 type MessageProps = {
   msg: string;
+  sender: string;
+  user: string;
 }
 
 const Message: FC<MessageProps> = (props) => {
-
+  const params = useParams();
 //   const truncate = (string: string) => {
 //     if (string.length > 25) {
 //       return string.slice(0, 21) + '...';
@@ -14,7 +19,7 @@ const Message: FC<MessageProps> = (props) => {
 //     }
 //   }
 
-  const isMe = props.msg[0] == 'a' ? true : false;
+  const isMe = props.user == props.sender ? true : false;
   let textboxStyle = 'rounded-[10px] mr-5 m-1 min-h-10 max-w-[75vw] w-fit align-middle text-wrap wrap-anywhere';
   textboxStyle += isMe ? ' bg-[#E0E0E0] text-[#233436] ml-auto' : ' bg-[#087E8B] text-[#F5F5F5] ml-5';
 

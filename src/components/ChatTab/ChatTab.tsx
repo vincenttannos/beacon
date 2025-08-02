@@ -1,3 +1,6 @@
+"use client"
+
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 type ChatTabProps = {
@@ -25,9 +28,15 @@ const ChatTab: FC<ChatTabProps> = (props) => {
     }
   }
   
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push(`/messages/${props.name}`);
+  }
 
   return (
-    <div className="border-1 border-[#233436] h-30 bg-[#F5F5F5] flex items-center max-w-1/1">
+    <div className="border-1 border-[#233436] h-30 bg-[#F5F5F5] flex items-center max-w-1/1"
+      onClick={onClick}>
       <img 
         // image is placeholder empty icon   
         src="https://braverplayers.org/wp-content/uploads/2022/09/braver-blank-pfp.jpg"

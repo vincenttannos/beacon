@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveData = exports.retrieveData = void 0;
+exports.getUser = exports.saveData = exports.retrieveData = void 0;
 var fs = require("fs");
 // import * as bcrypt from 'bcrypt';
 // import TokenGenerator, { BASE62 } from 'uuid-token-generator';
@@ -19,8 +19,8 @@ var retrieveData = function () {
         return users;
     }
     else {
-        fs.writeFileSync('data/chatRooms.json', JSON.stringify([]));
-        return [];
+        fs.writeFileSync('data/chatRooms.json', JSON.stringify({}));
+        return {};
     }
 };
 exports.retrieveData = retrieveData;
@@ -29,6 +29,19 @@ var saveData = function (data) {
     fs.writeFileSync('data/chatRooms.json', JSON.stringify(data, null, 2));
 };
 exports.saveData = saveData;
+// fetches username
+var getUser = function () {
+    if (fs.readFileSync('data/user.json')) {
+        var result = fs.readFileSync('data/user.json');
+        var username = JSON.parse(result.toString()).username;
+        return username;
+    }
+    else {
+        fs.writeFileSync('data/user.json', JSON.stringify({ username: "missing" }));
+        return "missing";
+    }
+};
+exports.getUser = getUser;
 // returns time to the second
 var timeNow = function () {
     return Math.floor(Date.now() / 1000);
@@ -213,7 +226,6 @@ var receiveMessage = function (chatRoom, publicKey, encryptedText, HMAC, sender,
     }
     // AES Decryption
     var decryptedText = aes256.decrypt(newKey, encryptedText);
-    ;
     var info = JSON.parse(decryptedText);
     // {
     //     timeSent: timeNow(),
